@@ -122,14 +122,23 @@ body{
 .map-card{margin-top:14px;background:linear-gradient(180deg,#fff,#f6fbf7);border:1.5px solid var(--line);border-radius:20px;padding:18px 18px 16px;text-align:center;box-shadow:0 4px 16px rgba(11,61,36,.05)}
 .map-head{font-size:14px;font-weight:800;color:var(--ink);margin-bottom:4px}
 .map-sub{font-size:12px;color:var(--ink-soft);margin-bottom:12px}
-.map-img{width:100%;max-width:280px;height:auto;margin:0 auto;display:block;mix-blend-mode:multiply}
-.map-foot{font-size:11.5px;color:var(--ink-soft);margin-top:8px;line-height:1.4}
+.map-canvas{position:relative;width:100%;max-width:290px;margin:4px auto 0;aspect-ratio:928/1152}
+.map-canvas .map-bg{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:multiply}
+.map-pin{position:absolute;width:14px;height:14px;transform:translate(-50%,-100%) scale(0);transform-origin:50% 100%;opacity:0;animation:pinIn .55s cubic-bezier(.2,1.4,.5,1) forwards;animation-delay:var(--d,0s)}
+.map-pin .head{position:absolute;inset:0;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,var(--green-500),var(--green-700));transform:rotate(-45deg);box-shadow:0 2px 5px rgba(11,61,36,.45)}
+.map-pin .head::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;background:#fff;border-radius:50%;transform:translate(-50%,-50%) rotate(45deg)}
+.map-pin .ping{position:absolute;left:50%;top:14%;width:14px;height:14px;border-radius:50%;background:var(--green-500);transform:translate(-50%,-50%);opacity:0;animation:ping 2.6s ease-out infinite;animation-delay:calc(var(--d,0s) + .55s)}
+@keyframes pinIn{0%{opacity:0;transform:translate(-50%,-100%) scale(0)}60%{opacity:1}100%{opacity:1;transform:translate(-50%,-100%) scale(1)}}
+@keyframes ping{0%{transform:translate(-50%,-50%) scale(1);opacity:.5}75%,100%{transform:translate(-50%,-50%) scale(3.6);opacity:0}}
+.map-foot{font-size:11.5px;color:var(--ink-soft);margin-top:10px;line-height:1.4}
 .testi-wrap{margin-top:26px}
 .testi-head{font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:center;margin-bottom:4px}
 .testi-sub{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-bottom:16px}
-.testi-scroll{display:flex;gap:13px;overflow-x:auto;padding:2px 2px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
-.testi-scroll::-webkit-scrollbar{height:0}
-.testi{flex:0 0 84%;scroll-snap-align:center;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 20px rgba(11,61,36,.07)}
+.testi-viewport{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.testi-track{display:flex;gap:13px;width:max-content;animation:marquee 90s linear infinite}
+.testi-track:hover,.testi-track:active{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.testi{flex:0 0 268px;background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 6px 20px rgba(11,61,36,.07)}
 .testi .top{display:flex;align-items:center;gap:12px;margin-bottom:11px}
 .testi .top img{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none;border:2px solid var(--lime-soft)}
 .testi .who b{display:block;font-size:14px;font-weight:800;color:var(--ink)}
@@ -311,42 +320,66 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="map-card">
       <div class="map-head">Unser Partnernetzwerk – bundesweit</div>
       <div class="map-sub">Geprüfte Betriebe der grünen Branche in ganz Deutschland</div>
-      <img class="map-img" src="map.png" alt="Partnerbetriebe in ganz Deutschland" loading="lazy">
+      <div class="map-canvas">
+        <img class="map-bg" src="map-clean.png" alt="Partnerbetriebe in ganz Deutschland" loading="lazy">
+        <span class="map-pin" style="left:46%;top:14%;--d:.05s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:55%;top:13%;--d:.55s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:40%;top:21%;--d:.30s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:64%;top:23%;--d:.95s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:33%;top:30%;--d:.45s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:50%;top:33%;--d:1.2s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:62%;top:34%;--d:.70s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:28%;top:42%;--d:1.4s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:43%;top:44%;--d:.85s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:58%;top:46%;--d:1.6s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:31%;top:54%;--d:1.05s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:48%;top:56%;--d:1.85s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:60%;top:57%;--d:1.3s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:38%;top:64%;--d:2.1s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:51%;top:68%;--d:1.55s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:42%;top:76%;--d:2.35s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:53%;top:80%;--d:1.95s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:46%;top:87%;--d:2.55s"><span class="ping"></span><span class="head"></span></span>
+      </div>
       <div class="map-foot">Von der Küste bis zum Bodensee – passende Arbeitgeber in deiner Nähe.</div>
     </div>
 
     <!-- Testimonials -->
     <div class="testi-wrap">
       <div class="testi-head">Fachkräfte, die mehr rausgeholt haben</div>
-      <div class="testi-sub">Echte Stimmen aus der grünen Branche · wische für mehr →</div>
-      <div class="testi-scroll">
-        <div class="testi">
-          <div class="top">
-            <img src="testi-landschaft.jpg" alt="Tobias K.">
-            <div class="who"><b>Tobias K., 28</b><span>Landschaftsgärtner · Raum Köln</span><div class="stars">★★★★★</div></div>
-          </div>
-          <div class="quote">Hab den Check aus Spaß gemacht – und gesehen, dass ich fast 400 € unter dem Schnitt lag. Kurz danach hatte ich mehrere Angebote auf dem Tisch.</div>
-        </div>
-        <div class="testi">
-          <div class="top">
-            <img src="testi-bauleiter.jpg" alt="Markus W.">
-            <div class="who"><b>Markus W., 46</b><span>Bauleiter GaLaBau · Stuttgart</span><div class="stars">★★★★★</div></div>
-          </div>
-          <div class="quote">Wollte eigentlich nur wissen, wo ich stehe. Dass sich seriöse Betriebe direkt bei mir gemeldet haben – ohne dass mein alter Chef was mitbekommt – war perfekt.</div>
-        </div>
-        <div class="testi">
-          <div class="top">
-            <img src="testi-baum.jpg" alt="Daniel R.">
-            <div class="who"><b>Daniel R., 32</b><span>Baumpfleger · Raum Hamburg</span><div class="stars">★★★★★</div></div>
-          </div>
-          <div class="quote">Mit SKT B und ETW war klar, dass mehr drin ist. Der Check hat's mir schwarz auf weiß gezeigt – und der neue Betrieb zahlt es auch.</div>
-        </div>
-        <div class="testi">
-          <div class="top">
-            <img src="testi-forst.jpg" alt="Sebastian H.">
-            <div class="who"><b>Sebastian H., 38</b><span>Forstwirt · Niedersachsen</span><div class="stars">★★★★★</div></div>
-          </div>
-          <div class="quote">Ehrlich, schnell, kein Spam. Ich hab nur meine Daten hinterlegt und konnte in Ruhe schauen, was die Betriebe bieten.</div>
+      <div class="testi-sub">Echte Stimmen aus der grünen Branche</div>
+      <div class="testi-viewport">
+        <div class="testi-track">
+          <div class="testi"><div class="top"><img src="testi-landschaft.jpg" alt="Tobias K." loading="lazy"><div class="who"><b>Tobias K., 28</b><span>Landschaftsgärtner · Raum Köln</span><div class="stars">★★★★★</div></div></div><div class="quote">Hab den Check aus Spaß gemacht – und gesehen, dass ich fast 400 € unter dem Schnitt lag. Kurz danach hatte ich mehrere Angebote auf dem Tisch.</div></div>
+          <div class="testi"><div class="top"><img src="testi-bauleiter.jpg" alt="Markus W." loading="lazy"><div class="who"><b>Markus W., 46</b><span>Bauleiter GaLaBau · Stuttgart</span><div class="stars">★★★★★</div></div></div><div class="quote">Wollte eigentlich nur wissen, wo ich stehe. Dass sich seriöse Betriebe direkt gemeldet haben – ohne dass mein alter Chef was mitbekommt – war perfekt.</div></div>
+          <div class="testi"><div class="top"><img src="testi-baum.jpg" alt="Daniel R." loading="lazy"><div class="who"><b>Daniel R., 32</b><span>Baumpfleger · Raum Hamburg</span><div class="stars">★★★★★</div></div></div><div class="quote">Mit SKT B und ETW war klar, dass mehr drin ist. Der Check hat's mir schwarz auf weiß gezeigt – und der neue Betrieb zahlt es auch.</div></div>
+          <div class="testi"><div class="top"><img src="testi-forst.jpg" alt="Sebastian H." loading="lazy"><div class="who"><b>Sebastian H., 38</b><span>Forstwirt · Niedersachsen</span><div class="stars">★★★★★</div></div></div><div class="quote">Ehrlich, schnell, kein Spam. Ich hab nur meine Daten hinterlegt und konnte in Ruhe schauen, was die Betriebe bieten.</div></div>
+          <div class="testi"><div class="top"><img src="testi-vorarbeiter.jpg" alt="Andreas M." loading="lazy"><div class="who"><b>Andreas M., 40</b><span>Vorarbeiter GaLaBau · Raum Dortmund</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Vorarbeiter dachte ich, ich verdien schon ordentlich. Der Check hat gezeigt, dass im Nachbarort 350 € mehr normal sind. Gewechselt – nicht bereut.</div></div>
+          <div class="testi"><div class="top"><img src="testi-polier.jpg" alt="Reinhard K." loading="lazy"><div class="who"><b>Reinhard K., 51</b><span>Polier · Raum Leipzig</span><div class="stars">★★★★★</div></div></div><div class="quote">Nach 30 Jahren auf dem Bau dachte ich, mich überrascht nichts mehr. Dass mein Marktwert deutlich über meinem Lohn lag, schon.</div></div>
+          <div class="testi"><div class="top"><img src="testi-baumaschine.jpg" alt="Kevin L." loading="lazy"><div class="who"><b>Kevin L., 35</b><span>Baumaschinenführer · Raum Frankfurt</span><div class="stars">★★★★★</div></div></div><div class="quote">Maschine fahren kann nicht jeder. Der Check hat mir endlich gezeigt, was die Fähigkeit auf dem Markt wirklich wert ist.</div></div>
+          <div class="testi"><div class="top"><img src="testi-meister.jpg" alt="Thomas B." loading="lazy"><div class="who"><b>Thomas B., 44</b><span>GaLaBau-Meister · Raum München</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Meister wusste ich nicht, dass ich unter Tarif lag. Zwei Wochen später hatte ich ein Angebot, das deutlich besser passt.</div></div>
+          <div class="testi"><div class="top"><img src="testi-pflasterer.jpg" alt="Jonas P." loading="lazy"><div class="who"><b>Jonas P., 29</b><span>Pflasterer · Raum Hannover</span><div class="stars">★★★★★</div></div></div><div class="quote">Saubere Sache. In zwei Minuten wusste ich, wo ich stehe – ohne mich vorher irgendwo bewerben zu müssen.</div></div>
+          <div class="testi"><div class="top"><img src="testi-gaertnerin.jpg" alt="Lena S." loading="lazy"><div class="who"><b>Lena S., 29</b><span>Gärtnerin Grünpflege · Raum Berlin</span><div class="stars">★★★★★</div></div></div><div class="quote">Ich hab lange gedacht, in der Grünpflege ist halt nicht mehr drin. Falsch gedacht – der Check hat mir die Augen geöffnet.</div></div>
+          <div class="testi"><div class="top"><img src="testi-forstmaschine.jpg" alt="Michael T." loading="lazy"><div class="who"><b>Michael T., 41</b><span>Forstmaschinenführer · Raum Kassel</span><div class="stars">★★★★★</div></div></div><div class="quote">Harvester-Erfahrung ist gefragt. Dass ich damit fast 500 € mehr verlangen kann, wusste ich vorher gar nicht.</div></div>
+          <div class="testi"><div class="top"><img src="testi-objektleiterin.jpg" alt="Sabine R." loading="lazy"><div class="who"><b>Sabine R., 38</b><span>Objektleiterin Grünpflege · Raum Köln</span><div class="stars">★★★★★</div></div></div><div class="quote">Diskret, schnell, kein Druck. Genau das, was man sich wünscht, wenn man sich erstmal nur umschauen will.</div></div>
+          <div class="testi"><div class="top"><img src="testi-kletterer.jpg" alt="Niklas F." loading="lazy"><div class="who"><b>Niklas F., 26</b><span>Baumkletterer (SKT) · Raum Bremen</span><div class="stars">★★★★★</div></div></div><div class="quote">Mit der SKT-Erfahrung war mehr drin, als mein Betrieb zahlte. Der Check hat's bestätigt – der Wechsel hat sich gelohnt.</div></div>
+          <div class="testi"><div class="top"><img src="testi-quereinsteiger.jpg" alt="Murat D." loading="lazy"><div class="who"><b>Murat D., 33</b><span>Quereinsteiger GaLaBau · Raum Düsseldorf</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Quereinsteiger war ich unsicher, was ich verlangen kann. Jetzt hab ich eine klare Zahl – und das Selbstvertrauen dazu.</div></div>
+          <div class="testi"><div class="top"><img src="testi-geselle.jpg" alt="Felix W." loading="lazy"><div class="who"><b>Felix W., 22</b><span>Landschaftsgärtner (Geselle) · Raum Nürnberg</span><div class="stars">★★★★★</div></div></div><div class="quote">Frisch ausgelernt und direkt gesehen, was als Geselle drin ist. Hab gleich besser verhandelt.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-landschaft.jpg" alt="" loading="lazy"><div class="who"><b>Tobias K., 28</b><span>Landschaftsgärtner · Raum Köln</span><div class="stars">★★★★★</div></div></div><div class="quote">Hab den Check aus Spaß gemacht – und gesehen, dass ich fast 400 € unter dem Schnitt lag. Kurz danach hatte ich mehrere Angebote auf dem Tisch.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-bauleiter.jpg" alt="" loading="lazy"><div class="who"><b>Markus W., 46</b><span>Bauleiter GaLaBau · Stuttgart</span><div class="stars">★★★★★</div></div></div><div class="quote">Wollte eigentlich nur wissen, wo ich stehe. Dass sich seriöse Betriebe direkt gemeldet haben – ohne dass mein alter Chef was mitbekommt – war perfekt.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-baum.jpg" alt="" loading="lazy"><div class="who"><b>Daniel R., 32</b><span>Baumpfleger · Raum Hamburg</span><div class="stars">★★★★★</div></div></div><div class="quote">Mit SKT B und ETW war klar, dass mehr drin ist. Der Check hat's mir schwarz auf weiß gezeigt – und der neue Betrieb zahlt es auch.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-forst.jpg" alt="" loading="lazy"><div class="who"><b>Sebastian H., 38</b><span>Forstwirt · Niedersachsen</span><div class="stars">★★★★★</div></div></div><div class="quote">Ehrlich, schnell, kein Spam. Ich hab nur meine Daten hinterlegt und konnte in Ruhe schauen, was die Betriebe bieten.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-vorarbeiter.jpg" alt="" loading="lazy"><div class="who"><b>Andreas M., 40</b><span>Vorarbeiter GaLaBau · Raum Dortmund</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Vorarbeiter dachte ich, ich verdien schon ordentlich. Der Check hat gezeigt, dass im Nachbarort 350 € mehr normal sind. Gewechselt – nicht bereut.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-polier.jpg" alt="" loading="lazy"><div class="who"><b>Reinhard K., 51</b><span>Polier · Raum Leipzig</span><div class="stars">★★★★★</div></div></div><div class="quote">Nach 30 Jahren auf dem Bau dachte ich, mich überrascht nichts mehr. Dass mein Marktwert deutlich über meinem Lohn lag, schon.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-baumaschine.jpg" alt="" loading="lazy"><div class="who"><b>Kevin L., 35</b><span>Baumaschinenführer · Raum Frankfurt</span><div class="stars">★★★★★</div></div></div><div class="quote">Maschine fahren kann nicht jeder. Der Check hat mir endlich gezeigt, was die Fähigkeit auf dem Markt wirklich wert ist.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-meister.jpg" alt="" loading="lazy"><div class="who"><b>Thomas B., 44</b><span>GaLaBau-Meister · Raum München</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Meister wusste ich nicht, dass ich unter Tarif lag. Zwei Wochen später hatte ich ein Angebot, das deutlich besser passt.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-pflasterer.jpg" alt="" loading="lazy"><div class="who"><b>Jonas P., 29</b><span>Pflasterer · Raum Hannover</span><div class="stars">★★★★★</div></div></div><div class="quote">Saubere Sache. In zwei Minuten wusste ich, wo ich stehe – ohne mich vorher irgendwo bewerben zu müssen.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-gaertnerin.jpg" alt="" loading="lazy"><div class="who"><b>Lena S., 29</b><span>Gärtnerin Grünpflege · Raum Berlin</span><div class="stars">★★★★★</div></div></div><div class="quote">Ich hab lange gedacht, in der Grünpflege ist halt nicht mehr drin. Falsch gedacht – der Check hat mir die Augen geöffnet.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-forstmaschine.jpg" alt="" loading="lazy"><div class="who"><b>Michael T., 41</b><span>Forstmaschinenführer · Raum Kassel</span><div class="stars">★★★★★</div></div></div><div class="quote">Harvester-Erfahrung ist gefragt. Dass ich damit fast 500 € mehr verlangen kann, wusste ich vorher gar nicht.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-objektleiterin.jpg" alt="" loading="lazy"><div class="who"><b>Sabine R., 38</b><span>Objektleiterin Grünpflege · Raum Köln</span><div class="stars">★★★★★</div></div></div><div class="quote">Diskret, schnell, kein Druck. Genau das, was man sich wünscht, wenn man sich erstmal nur umschauen will.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-kletterer.jpg" alt="" loading="lazy"><div class="who"><b>Niklas F., 26</b><span>Baumkletterer (SKT) · Raum Bremen</span><div class="stars">★★★★★</div></div></div><div class="quote">Mit der SKT-Erfahrung war mehr drin, als mein Betrieb zahlte. Der Check hat's bestätigt – der Wechsel hat sich gelohnt.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-quereinsteiger.jpg" alt="" loading="lazy"><div class="who"><b>Murat D., 33</b><span>Quereinsteiger GaLaBau · Raum Düsseldorf</span><div class="stars">★★★★★</div></div></div><div class="quote">Als Quereinsteiger war ich unsicher, was ich verlangen kann. Jetzt hab ich eine klare Zahl – und das Selbstvertrauen dazu.</div></div>
+          <div class="testi" aria-hidden="true"><div class="top"><img src="testi-geselle.jpg" alt="" loading="lazy"><div class="who"><b>Felix W., 22</b><span>Landschaftsgärtner (Geselle) · Raum Nürnberg</span><div class="stars">★★★★★</div></div></div><div class="quote">Frisch ausgelernt und direkt gesehen, was als Geselle drin ist. Hab gleich besser verhandelt.</div></div>
         </div>
       </div>
     </div>
