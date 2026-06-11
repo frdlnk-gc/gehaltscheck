@@ -1256,6 +1256,14 @@ function buildResultQuery(c){
 }
 /* Voll-URL – für die E-Mail (Button/Link kann die ganze URL nutzen). */
 function buildResultUrl(c){ return RESULT_PAGE+'?'+buildResultQuery(c); }
+/* Telefonnummer ins internationale Format (ohne +, DE-Default) für WhatsApp. */
+function toE164(raw){
+  let p=(raw||'').replace(/[\s\/().\-]/g,'');
+  if(p.charAt(0)==='+') p=p.slice(1);
+  else if(p.slice(0,2)==='00') p=p.slice(2);
+  else if(p.charAt(0)==='0') p='49'+p.slice(1);
+  return p;
+}
 
 /* ---------- Lead senden ---------- */
 /* Map: internes Event -> Meta-Standard-Event-Name (für Pixel + CAPI). */
@@ -1280,7 +1288,7 @@ function sendLead(event){
     client_user_agent: navigator.userAgent,
     // --- User-Daten (Server hasht mit SHA-256 vor dem Senden an Meta) ---
     first_name:S.firstName, last_name:S.lastName, name:((S.firstName+' '+S.lastName).trim()),
-    phone:S.phone, email:S.email, preferred_channel:S.channel, contact:S.contact,
+    phone:S.phone, phone_e164:toE164(S.phone), email:S.email, preferred_channel:S.channel, contact:S.contact,
     fachrichtung:S.fach, fachrichtung_label:c.f.label,
     position:S.pos, position_label:c.p.label,
     plz:S.plz, ort:S.ort, kreis:S.kreis, region:S.region, region_label:REGIONS[S.region]?REGIONS[S.region].label:null, metro:S.metroLabel,
