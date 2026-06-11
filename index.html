@@ -1235,6 +1235,25 @@ function declineMatch(){
   go('s-done');
 }
 
+/* ---------- Ergebnis-Link für WhatsApp/E-Mail ----------
+   Enthält NUR nicht-persönliche Ergebnis-Daten (keine Kontaktdaten,
+   kein aktuelles Gehalt). Der Verdict wird clientseitig zu einer
+   Kategorie verdichtet, damit kein Rückschluss aufs Gehalt möglich ist. */
+const RESULT_PAGE = "https://gehaltscheck.green-careers.de/ergebnis.html";
+function buildResultUrl(c){
+  let v='unknown';
+  if(S.salaryKnown){ const diff=Math.round((c.mid-S.salary)/c.mid*100); v = diff>=6?'under' : diff<=-6?'over' : 'fair'; }
+  const certLabels=(S.certs||[]).filter(k=>k&&k!=='none'&&CERTS[k]).map(k=>CERTS[k].label);
+  const p=new URLSearchParams();
+  p.set('lo',c.low); p.set('hi',c.high);
+  if(c.tarif) p.set('tf',c.tarif);
+  p.set('f',c.f.label); p.set('fs',c.f.short);
+  p.set('p',c.p.label); p.set('r',c.regLabel); p.set('e',c.e.label);
+  p.set('h',S.hours); if(certLabels.length) p.set('c',certLabels.join('|'));
+  p.set('v',v);
+  return RESULT_PAGE+'?'+p.toString();
+}
+
 /* ---------- Lead senden ---------- */
 /* Map: internes Event -> Meta-Standard-Event-Name (für Pixel + CAPI). */
 const META_EVENT_MAP = { lead_captured:'Lead', match_optin:'CompleteRegistration', match_declined:'MatchDeclined' };
@@ -1271,7 +1290,9 @@ function sendLead(event){
     zertifikate:S.certs,
     market_low:c.low, market_high:c.high, market_mid:c.mid,
     tarif_benchmark:c.tarif||null,
-    wants_matching:S.match
+    wants_matching:S.match,
+    result_url:buildResultUrl(c),
+    market_range:c.low.toLocaleString('de-DE')+' – '+c.high.toLocaleString('de-DE')+' €'
   };
   console.log('[LEAD]',payload);
   if(LEAD_WEBHOOK){

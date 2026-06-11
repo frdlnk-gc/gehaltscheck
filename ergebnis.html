@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Dein Gehalts-Check – Ergebnis | GreenCareers</title>
+<meta name="description" content="Dein persönliches Gehalts-Check-Ergebnis für die grüne Branche – realistische Marktwert-Spanne, Aufschlüsselung und Einschätzung von GreenCareers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#0b3d24;--green-800:#12502f;--green-700:#16653b;--green-600:#1c834c;
+  --green-500:#22a35d;--green-400:#34c171;--lime:#a3e635;--lime-soft:#d9f99d;
+  --bg:#f3f8f3;--card:#ffffff;--ink:#0e2417;--ink-soft:#4b5d52;--line:#e2ece3;
+  --shadow:0 10px 40px rgba(11,61,36,.10);--shadow-lg:0 24px 70px rgba(11,61,36,.18);--r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding:0 0 40px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:460px;margin:0 auto;padding:0 16px}
+.topbar{display:flex;align-items:center;justify-content:center;gap:9px;padding:18px 0 6px}
+.topbar img{height:30px;width:auto}
+.topbar b{font-size:16px;font-weight:800;color:var(--green-800);letter-spacing:-.01em}
+.result-head{text-align:center;margin:14px 0 2px}
+.result-head .hi{font-size:13px;font-weight:700;color:var(--green-600);margin-bottom:4px}
+.result-head h1{font-size:23px;font-weight:800;letter-spacing:-.02em;line-height:1.18;color:var(--ink)}
+.gauge-card{background:linear-gradient(165deg,var(--green-800),var(--green-600));color:#fff;border-radius:22px;padding:24px 20px;margin:16px 0;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
+.gauge-card::after{content:"";position:absolute;left:-50px;bottom:-70px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(163,230,53,.25),transparent 70%)}
+.gauge-card .lbl{font-size:12.5px;color:rgba(255,255,255,.82);font-weight:600;text-align:center;margin-bottom:4px}
+.gauge-range{text-align:center;font-size:32px;font-weight:800;letter-spacing:-.02em;margin-bottom:2px}
+.gauge-range .to{color:var(--lime)}
+.gauge-sub{text-align:center;font-size:12.5px;color:rgba(255,255,255,.78);margin-bottom:12px}
+.gauge-qual{text-align:center;font-size:12px;font-weight:600;color:var(--green-900);background:rgba(163,230,53,.92);border-radius:999px;padding:7px 14px;margin:0 auto 16px;max-width:fit-content;line-height:1.35}
+.bar{position:relative;height:14px;border-radius:99px;background:rgba(255,255,255,.18);margin:30px 4px 8px}
+.bar .fill{position:absolute;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lime),#cdee7a)}
+.bar .tarif{position:absolute;top:-9px;width:3px;height:32px;background:var(--lime);border-radius:99px}
+.bar .tarif .tip{position:absolute;top:34px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10.5px;font-weight:700;color:var(--lime)}
+.verdict{border-radius:16px;padding:15px 16px;margin:16px 0;font-size:14.5px;font-weight:600;display:flex;gap:11px;align-items:flex-start;line-height:1.4}
+.verdict.under{background:#fdf3e3;border:1.5px solid #f3d9a8;color:#8a5a12}
+.verdict.fair{background:#edfaf0;border:1.5px solid #c4ecce;color:var(--green-800)}
+.verdict .vico{font-size:22px;flex:none}
+.breakdown{display:flex;flex-direction:column;gap:1px;background:var(--line);border-radius:14px;overflow:hidden;margin:14px 0}
+.brow{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:13px 15px;font-size:14px;gap:12px}
+.brow .k{color:var(--ink-soft);font-weight:500}
+.brow .v{font-weight:700;color:var(--ink);text-align:right}
+.section-title{font-size:15px;font-weight:800;color:var(--ink);margin:22px 0 8px}
+.cta-card{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+.cta-card h3{font-size:17px;font-weight:800;letter-spacing:-.01em;margin-bottom:7px;color:var(--ink)}
+.cta-card p{font-size:14px;color:var(--ink-soft);margin-bottom:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:14px;padding:15px 18px;font-family:inherit;font-size:15.5px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .08s ease,box-shadow .2s ease}
+.btn:active{transform:scale(.98)}
+.btn-lime{background:linear-gradient(135deg,var(--lime),#86c426);color:var(--green-900);box-shadow:0 8px 22px rgba(134,196,38,.4)}
+.disclaim{font-size:12px;color:var(--ink-soft);margin-top:12px;line-height:1.45;background:#f4f9f4;border-radius:11px;padding:10px 12px}
+.footnote{font-size:11px;color:#9aa89f;text-align:center;line-height:1.6;margin-top:26px}
+.footnote a{color:var(--green-600);font-weight:600}
+.fallback{text-align:center;padding:60px 10px}
+.fallback h1{font-size:22px;font-weight:800;margin-bottom:10px}
+.fallback p{color:var(--ink-soft);margin-bottom:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <img src="logo.png" alt="GreenCareers" onerror="this.style.display='none'">
+    <b>GreenCareers</b>
+  </div>
+  <div id="app"></div>
+</div>
+<script>
+const FALLBACK_URL = "https://gehaltscheck.green-careers.de/";
+const JOBS_URL     = "https://www.green-careers.de";
+
+function q(name){ return new URLSearchParams(location.search).get(name); }
+function num(v){ const n=parseInt(String(v||'').replace(/\D/g,''),10); return isNaN(n)?null:n; }
+function de(n){ return (n||0).toLocaleString('de-DE'); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+const lo  = num(q('lo'));
+const hi  = num(q('hi'));
+const tf  = num(q('tf'));
+const fach= q('f'); const fachShort = q('fs') || 'der grünen Branche';
+const pos = q('p');
+const reg = q('r');
+const exp = q('e');
+const hrs = q('h');
+const certs = (q('c')||'').split('|').map(s=>s.trim()).filter(Boolean);
+const verdict = (q('v')||'unknown').toLowerCase();
+
+const app = document.getElementById('app');
+
+if(lo==null || hi==null || !pos){
+  // Kein gültiges Ergebnis in der URL → freundlicher Fallback
+  app.innerHTML = `<div class="fallback">
+    <h1>Ergebnis nicht gefunden 🌱</h1>
+    <p>Dieser Link enthält keine gültigen Ergebnis-Daten mehr. Starte den Gehalts-Check einfach neu – dauert nur 2 Minuten.</p>
+    <a class="btn btn-lime" href="${FALLBACK_URL}">Gehalts-Check starten →</a>
+  </div>`;
+} else {
+  const inPhrase = ({GaLaBau:'im GaLaBau',Grünpflege:'in der Grünpflege',Baumpflege:'in der Baumpflege',Forst:'im Forst'})[fachShort] || ('in '+fachShort);
+
+  // Verdict-Text (rein qualitativ – keine persönlichen Zahlen)
+  let vClass='fair', vIco='🎯', vText='';
+  if(verdict==='under'){
+    vClass='under'; vIco='📉';
+    vText=`Du liegst aktuell <b>unter dem Marktschnitt</b> für ${esc(pos)}${reg?` in ${esc(reg)}`:''}. Da ist spürbar mehr für dich drin – oft mehrere hundert Euro im Monat.`;
+  } else if(verdict==='over'){
+    vClass='fair'; vIco='🚀';
+    vText=`Stark! Du liegst <b>über dem Marktschnitt</b> deiner Region. Trotzdem lohnt der Blick: einzelne Betriebe zahlen nochmal mehr.`;
+  } else if(verdict==='fair'){
+    vClass='fair'; vIco='⚖️';
+    vText=`Du wirst <b>fair bezahlt</b> und liegst im Marktschnitt für ${esc(pos)}${reg?` in ${esc(reg)}`:''}. Nach oben ist trotzdem oft Luft.`;
+  } else {
+    vClass='fair'; vIco='🎯';
+    vText=`Das ist die realistische Spanne für <b>${esc(pos)}</b>${reg?` in <b>${esc(reg)}</b>`:''}. Viele wissen nicht, dass im oberen Bereich deutlich mehr drin ist.`;
+  }
+
+  // Bar-Skala aus lo/hi/tarif
+  const domLow  = Math.min(lo, tf||lo)*0.96;
+  const domHigh = Math.max(hi, tf||hi)*1.04;
+  const pct = v => Math.max(2, Math.min(98, ((v-domLow)/(domHigh-domLow))*100));
+
+  // Breakdown-Zeilen
+  const rows=[];
+  if(fach) rows.push(['Fachrichtung', esc(fach)]);
+  rows.push(['Position', esc(pos)]);
+  if(reg)  rows.push(['Region', esc(reg)]);
+  if(exp)  rows.push(['Erfahrung', esc(exp)]);
+  if(hrs)  rows.push(['Wochenstunden', esc(hrs)+' Std.']);
+  if(certs.length) rows.push(['Zertifikate', certs.map(esc).join(', ')]);
+  if(tf)   rows.push(['Tarif-Benchmark 2026', de(tf)+' € / Monat']);
+  rows.push(['Realistische Spanne', de(lo)+' – '+de(hi)+' €']);
+
+  const certBit = certs.length ? `${certs.length} Zertifikat${certs.length>1?'e':''}` : 'ohne Zusatz-Zertifikate';
+
+  app.innerHTML = `
+    <div class="result-head">
+      <div class="hi">Dein Gehalts-Check 🌱</div>
+      <h1>Das kannst du ${inPhrase} verdienen</h1>
+    </div>
+
+    <div class="gauge-card">
+      <div class="lbl">${esc(pos)}${reg?' · '+esc(reg):''}</div>
+      <div class="gauge-range">€${de(lo)} <span class="to">– €${de(hi)}</span></div>
+      <div class="gauge-sub">brutto / Monat · Vollzeit · Stand 2026</div>
+      <div class="gauge-qual">🎓 Berechnet für deine Angaben: <b>${exp?esc(exp)+' Erfahrung · ':''}${certBit}</b></div>
+      <div class="bar">
+        <div class="fill" style="left:${pct(lo).toFixed(1)}%;right:${(100-pct(hi)).toFixed(1)}%"></div>
+        ${tf?`<div class="tarif" style="left:${pct(tf).toFixed(1)}%"><span class="tip">Tarif</span></div>`:''}
+      </div>
+    </div>
+
+    <div class="verdict ${vClass}"><span class="vico">${vIco}</span><div>${vText}</div></div>
+
+    <div class="section-title">Deine Aufschlüsselung</div>
+    <div class="breakdown">${rows.map(r=>`<div class="brow"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('')}</div>
+
+    <div class="cta-card">
+      <h3>Was zahlt dir ein anderer Betrieb?</h3>
+      <p>500+ geprüfte Betriebe ${inPhrase} suchen aktuell Fachkräfte wie dich – viele zahlen am oberen Ende der Spanne. Sieh dir an, wer in deiner Region einstellt.</p>
+      <a class="btn btn-lime" href="${JOBS_URL}" target="_blank" rel="noopener">Passende Arbeitgeber ansehen →</a>
+      <div class="disclaim">🤫 Diskret: Wenn du im Check zugestimmt hast, melden sich passende Betriebe direkt bei dir. Dein jetziger Arbeitgeber erfährt nichts.</div>
+    </div>
+
+    <div class="footnote">
+      Datenbasis: Bundes-Rahmentarifvertrag GaLaBau (Stand 2026), Lohngruppen sowie aktuelle Marktdaten. Ergebnisse sind Orientierungswerte, keine Rechtsberatung.<br>
+      © GreenCareers · <a href="https://www.green-careers.de">green-careers.de</a>
+    </div>`;
+}
+</script>
+</body>
+</html>
