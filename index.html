@@ -340,6 +340,18 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <span class="map-pin" style="left:42%;top:76%;--d:2.35s"><span class="ping"></span><span class="head"></span></span>
         <span class="map-pin" style="left:53%;top:80%;--d:1.95s"><span class="ping"></span><span class="head"></span></span>
         <span class="map-pin" style="left:46%;top:87%;--d:2.55s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:49%;top:9%;--d:.20s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:61%;top:17%;--d:1.1s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:36%;top:27%;--d:.65s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:57%;top:29%;--d:1.7s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:64%;top:31%;--d:.40s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:66%;top:39%;--d:2.0s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:36%;top:52%;--d:1.15s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:27%;top:58%;--d:2.25s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:57%;top:70%;--d:.90s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:63%;top:73%;--d:2.4s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:46%;top:82%;--d:1.45s"><span class="ping"></span><span class="head"></span></span>
+        <span class="map-pin" style="left:40%;top:85%;--d:2.7s"><span class="ping"></span><span class="head"></span></span>
       </div>
       <div class="map-foot">Von der Küste bis zum Bodensee – passende Arbeitgeber in deiner Nähe.</div>
     </div>
@@ -547,10 +559,18 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <span>Ja, schickt mir mein Gehalts-Ergebnis per <span id="cChan">WhatsApp</span>. Ich kann jederzeit widersprechen. <a href="#" onclick="return false">Datenschutz</a></span>
       </label>
 
-      <label class="consent" style="background:#edfaf0;border:1.5px solid #c4ecce;border-radius:13px;padding:12px 13px;margin:0 0 16px">
-        <input type="checkbox" id="c2">
-        <span><b style="color:var(--green-800)">Ja, ich bin offen für mehr Gehalt.</b> Schlagt mir passende, geprüfte <span id="cFach">GaLaBau</span>-Arbeitgeber aus meiner Region vor, die mehr zahlen – und gebt meine Angaben dafür an passende Betriebe weiter. Mein jetziger Arbeitgeber erfährt nichts. <span style="color:#9aa89f">(optional)</span></span>
+      <label class="consent" style="background:#edfaf0;border:1.5px solid #c4ecce;border-radius:13px;padding:12px 13px;margin:0 0 10px">
+        <input type="checkbox" id="c2" onchange="toggleEmployerField()">
+        <span><b style="color:var(--green-800)">Ja, ich bin offen für mehr Gehalt.</b> Schlagt mir passende, geprüfte <span id="cFach">GaLaBau</span>-Arbeitgeber aus meiner Region vor, die mehr zahlen – und gebt meine Angaben dafür an passende regionale Partnerbetriebe weiter. Mein jetziger Arbeitgeber erfährt nichts. <span style="color:#9aa89f">(optional)</span></span>
       </label>
+
+      <div id="employerWrap" style="display:none;margin:0 0 16px">
+        <div class="field">
+          <label for="fEmployer">Dein aktueller Arbeitgeber <span style="color:#9aa89f;font-weight:500">(optional, aber empfohlen)</span></label>
+          <input id="fEmployer" type="text" placeholder="z. B. Mustermann GaLaBau GmbH" autocomplete="organization">
+          <div style="font-size:11.5px;color:var(--ink-soft);margin-top:7px;line-height:1.45">🔒 Diesen Betrieb <b>schließen wir bei der Vermittlung gezielt aus</b> – so landet deine Anfrage garantiert nicht bei deinem jetzigen Chef.</div>
+        </div>
+      </div>
 
       <button class="btn btn-primary" onclick="submitGate()">Mein Ergebnis ansehen <span class="arrow">→</span></button>
       <div id="gateErr" style="color:#c0392b;font-size:13px;font-weight:600;text-align:center;margin-top:10px;display:none"></div>
@@ -1001,6 +1021,11 @@ function setChannel(ch){
   document.getElementById('tgMail').classList.toggle('on',ch==='email');
   const cc=document.getElementById('cChan'); if(cc) cc.textContent=(ch==='whatsapp'?'WhatsApp':'E-Mail');
 }
+function toggleEmployerField(){
+  const on=document.getElementById('c2').checked;
+  document.getElementById('employerWrap').style.display=on?'block':'none';
+}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function isValidPhone(v){ const d=v.replace(/[^\d]/g,''); return /^[+]?[\d\s\/().-]+$/.test(v) && d.length>=7 && d.length<=15; }
 function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
 function submitGate(){
@@ -1019,6 +1044,7 @@ function submitGate(){
   S.firstName=first; S.lastName=last; S.name=first; S.phone=phone; S.email=email;
   S.contact=(S.channel==='whatsapp'?phone:email);
   S.match=document.getElementById('c2').checked;
+  S.currentEmployer=document.getElementById('fEmployer').value.trim();
   // Advanced Matching: Kontaktdaten an Pixel (Meta hasht clientseitig)
   if(window.fbq && window.META_PIXEL_ID){
     fbq('init', window.META_PIXEL_ID, {em:S.email, ph:S.phone, fn:S.firstName, ln:S.lastName, zp:S.plz, ct:S.ort||'', country:'de'});
@@ -1056,7 +1082,7 @@ function renderResult(){
     const diff=Math.round((c.mid-S.salary)/c.mid*100);
     if(diff>=6){
       v.className='verdict under';
-      v.innerHTML=`<span class="vico">📉</span><div>Du verdienst aktuell rund <b>${diff}&nbsp;% unter</b> dem Marktschnitt für ${c.p.label} in ${c.regLabel}. Das sind ca. <b>${((c.mid-S.salary)*12).toLocaleString('de-DE')}&nbsp;€ pro Jahr</b>, die drin wären.</div>`;
+      v.innerHTML=`<span class="vico">📉</span><div>Du verdienst aktuell rund <b>${diff}&nbsp;% unter</b> dem Marktschnitt für ${c.p.label} in ${c.regLabel}. Das sind ca. <b>${((c.mid-S.salary)*12).toLocaleString('de-DE')}&nbsp;€ mehr pro Jahr</b>, die für dich drin wären.</div>`;
     } else if(diff<=-6){
       v.className='verdict fair';
       v.innerHTML=`<span class="vico">🚀</span><div>Stark! Du liegst rund <b>${Math.abs(diff)}&nbsp;% über</b> dem Marktschnitt deiner Region. Trotzdem lohnt der Blick: Manche Betriebe zahlen nochmal mehr.</div>`;
@@ -1097,11 +1123,14 @@ function renderMatchCta(){
   if(!el) return;
   const fShort=(S.fach&&FACH[S.fach])?FACH[S.fach].short:'GaLaBau';
   if(S.match){
+    const excl = S.currentEmployer
+      ? `🔒 Diskret: <b>${esc(S.currentEmployer)}</b> – deinen jetzigen Arbeitgeber – schließen wir bei der Vermittlung gezielt aus. Deine Anfrage landet garantiert nicht dort.`
+      : `🤫 Diskret: Wir geben deine Angaben nur passend an geprüfte Betriebe weiter. Dein jetziger Arbeitgeber erfährt nichts.`;
     el.innerHTML=`<div class="matchbox">
       <div class="pill">🤝 Du bist dabei</div>
       <div class="mh">Wir suchen dir Arbeitgeber, die <span style="color:var(--green-600)">mehr zahlen</span></div>
-      <div class="mp">Du hast zugestimmt – wir gleichen dein Profil mit 500+ geprüften ${fShort}-Betrieben aus deiner Region ab und geben deine Angaben an passende Betriebe weiter. Die melden sich dann direkt über ${S.channel==='whatsapp'?'WhatsApp':'E-Mail'} bei dir.</div>
-      <div class="disclaim">🤫 Diskret: Wir geben deine Angaben nur passend an geprüfte Betriebe weiter. Dein jetziger Arbeitgeber erfährt nichts.</div>
+      <div class="mp">Du hast zugestimmt – wir gleichen dein Profil mit 500+ geprüften ${fShort}-Betrieben aus deiner Region ab und geben deine Angaben an passende regionale Partnerbetriebe weiter. Die melden sich dann direkt über ${S.channel==='whatsapp'?'WhatsApp':'E-Mail'} bei dir.</div>
+      <div class="disclaim">${excl}</div>
     </div>`;
   } else {
     el.innerHTML=`<div class="matchbox">
@@ -1182,6 +1211,7 @@ function sendLead(event){
     wochenstunden:S.hours,
     lohn_zufriedenheit:S.sat, lohn_zufriedenheit_label:S.sat?SAT[S.sat].label:null,
     current_salary:S.salaryKnown?S.salary:null,
+    current_employer:S.currentEmployer||null,
     zertifikate:S.certs,
     market_low:c.low, market_high:c.high, market_mid:c.mid,
     tarif_benchmark:c.tarif||null,
