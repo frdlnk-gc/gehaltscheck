@@ -1256,6 +1256,14 @@ function buildResultQuery(c){
 }
 /* Voll-URL – für die E-Mail (Button/Link kann die ganze URL nutzen). */
 function buildResultUrl(c){ return RESULT_PAGE+'?'+buildResultQuery(c); }
+/* Kompakter, URL-sicherer Token (base64url) des Query-Strings.
+   Für den WhatsApp-Button: enthält nur A-Z a-z 0-9 - _  => kein &, =, |
+   => übersteht WhatsApps URL-Handling unbeschadet. ergebnis.html liest ?d=<token>. */
+function b64url(str){
+  return btoa(unescape(encodeURIComponent(str)))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function buildResultToken(c){ return b64url(buildResultQuery(c)); }
 /* Telefonnummer ins internationale Format (ohne +, DE-Default) für WhatsApp. */
 function toE164(raw){
   let p=(raw||'').replace(/[\s\/().\-]/g,'');
@@ -1304,6 +1312,7 @@ function sendLead(event){
     wants_matching:S.match,
     result_url:buildResultUrl(c),
     result_query:buildResultQuery(c),
+    result_token:buildResultToken(c),
     market_range:c.low.toLocaleString('de-DE')+' – '+c.high.toLocaleString('de-DE')+' €'
   };
   console.log('[LEAD]',payload);

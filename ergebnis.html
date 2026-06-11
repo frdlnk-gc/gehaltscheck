@@ -72,7 +72,17 @@ body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;backgrou
 const FALLBACK_URL = "https://gehaltscheck.green-careers.de/";
 const JOBS_URL     = "https://www.green-careers.de";
 
-function q(name){ return new URLSearchParams(location.search).get(name); }
+/* Parameter kommen entweder als kompakter Token (?d=base64url) – so liefert
+   ihn der WhatsApp-Button – oder als klassische Query (?lo=&hi=… – E-Mail/Direktlink). */
+function ub64url(t){
+  t=String(t||'').replace(/-/g,'+').replace(/_/g,'/');
+  while(t.length%4) t+='=';
+  return decodeURIComponent(escape(atob(t)));
+}
+let SP = new URLSearchParams(location.search);
+const _d = SP.get('d');
+if(_d){ try{ SP = new URLSearchParams(ub64url(_d)); }catch(e){} }
+function q(name){ return SP.get(name); }
 function num(v){ const n=parseInt(String(v||'').replace(/\D/g,''),10); return isNaN(n)?null:n; }
 function de(n){ return (n||0).toLocaleString('de-DE'); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
