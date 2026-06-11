@@ -123,13 +123,13 @@ body{
 .map-head{font-size:14px;font-weight:800;color:var(--ink);margin-bottom:4px}
 .map-sub{font-size:12px;color:var(--ink-soft);margin-bottom:12px}
 .map-canvas{position:relative;width:100%;max-width:290px;margin:4px auto 0;aspect-ratio:928/1152}
-.map-canvas .map-bg{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:multiply}
-.map-pin{position:absolute;width:14px;height:14px;transform:translate(-50%,-100%) scale(0);transform-origin:50% 100%;opacity:0;animation:pinIn .55s cubic-bezier(.2,1.4,.5,1) forwards;animation-delay:var(--d,0s)}
-.map-pin .head{position:absolute;inset:0;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,var(--green-500),var(--green-700));transform:rotate(-45deg);box-shadow:0 2px 5px rgba(11,61,36,.45)}
-.map-pin .head::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;background:#fff;border-radius:50%;transform:translate(-50%,-50%) rotate(45deg)}
-.map-pin .ping{position:absolute;left:50%;top:14%;width:14px;height:14px;border-radius:50%;background:var(--green-500);transform:translate(-50%,-50%);opacity:0;animation:ping 2.6s ease-out infinite;animation-delay:calc(var(--d,0s) + .55s)}
-@keyframes pinIn{0%{opacity:0;transform:translate(-50%,-100%) scale(0)}60%{opacity:1}100%{opacity:1;transform:translate(-50%,-100%) scale(1)}}
-@keyframes ping{0%{transform:translate(-50%,-50%) scale(1);opacity:.5}75%,100%{transform:translate(-50%,-50%) scale(3.6);opacity:0}}
+.map-shape{position:absolute;inset:0;background:linear-gradient(160deg,var(--lime-soft) 0%,var(--green-400) 38%,var(--green-600) 100%);-webkit-mask:url(map-mask.png) center/contain no-repeat;mask:url(map-mask.png) center/contain no-repeat;-webkit-mask-mode:luminance;mask-mode:luminance}
+.map-pin{position:absolute;width:15px;height:15px;transform:translate(-50%,-100%);transform-origin:50% 100%;animation:pinBeat 3.4s ease-in-out infinite;animation-delay:var(--d,0s)}
+.map-pin .head{position:absolute;inset:0;border-radius:50% 50% 50% 0;background:linear-gradient(135deg,var(--green-500),var(--green-700));transform:rotate(-45deg);box-shadow:0 2px 6px rgba(11,61,36,.5)}
+.map-pin .head::after{content:"";position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--lime);border-radius:50%;transform:translate(-50%,-50%) rotate(45deg)}
+.map-pin .ping{position:absolute;left:50%;top:13%;width:15px;height:15px;border-radius:50%;background:var(--green-500);transform:translate(-50%,-50%);opacity:0;animation:ping 3.4s ease-out infinite;animation-delay:var(--d,0s)}
+@keyframes pinBeat{0%,60%,100%{transform:translate(-50%,-100%) scale(1)}72%{transform:translate(-50%,-100%) scale(1.28)}84%{transform:translate(-50%,-100%) scale(.96)}}
+@keyframes ping{0%{transform:translate(-50%,-50%) scale(1);opacity:.55}55%,100%{transform:translate(-50%,-50%) scale(3.8);opacity:0}}
 .map-foot{font-size:11.5px;color:var(--ink-soft);margin-top:10px;line-height:1.4}
 .testi-wrap{margin-top:26px}
 .testi-head{font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:center;margin-bottom:4px}
@@ -279,7 +279,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 <div class="wrap">
 
   <div class="topbar">
-    <div class="brand"><img class="leaf" src="logo.png" alt="GreenCareers"> GreenCareers</div>
+    <a class="brand" href="./" onclick="event.preventDefault();location.reload();" style="text-decoration:none;cursor:pointer"><img class="leaf" src="logo.png" alt="GreenCareers"> GreenCareers</a>
     <div class="badge-safe">🔒 100&nbsp;% anonym</div>
   </div>
 
@@ -320,8 +320,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="map-card">
       <div class="map-head">Unser Partnernetzwerk – bundesweit</div>
       <div class="map-sub">Geprüfte Betriebe der grünen Branche in ganz Deutschland</div>
-      <div class="map-canvas">
-        <img class="map-bg" src="map-clean.png" alt="Partnerbetriebe in ganz Deutschland" loading="lazy">
+      <div class="map-canvas" id="mapCanvas">
+        <div class="map-shape" role="img" aria-label="Partnerbetriebe in ganz Deutschland"></div>
         <span class="map-pin" style="left:46%;top:14%;--d:.05s"><span class="ping"></span><span class="head"></span></span>
         <span class="map-pin" style="left:55%;top:13%;--d:.55s"><span class="ping"></span><span class="head"></span></span>
         <span class="map-pin" style="left:40%;top:21%;--d:.30s"><span class="ping"></span><span class="head"></span></span>
@@ -588,8 +588,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     <div class="card done">
       <div class="big" id="doneIco">✅</div>
       <h2 id="doneTitle">Top, Max! 🌱</h2>
-      <p id="doneMsg">Passende Arbeitgeber aus deiner Region melden sich direkt bei dir – mit konkreten Job-Angeboten.</p>
-      <p style="font-size:13px;margin-top:14px">Behalte dein <b id="doneChan">WhatsApp</b> im Blick.</p>
+      <p id="doneMsg">Top-Arbeitgeber aus deiner Region melden sich in den nächsten Tagen direkt bei dir – mit konkreten Job-Angeboten.</p>
+      <p id="doneTip" style="font-size:13px;margin-top:14px">Kleiner Tipp: <b>Geh auch ran, wenn dich eine unbekannte Nummer anruft</b> – das sind dann die passenden Betriebe, die dich erreichen wollen.</p>
     </div>
   </section>
 
@@ -1127,8 +1127,8 @@ function countUp(id,from,to,dur){
 function finishMatched(){
   document.getElementById('doneIco').textContent='🤝';
   document.getElementById('doneTitle').textContent=`Top, ${S.name}! 🌱`;
-  document.getElementById('doneMsg').textContent='Passende Arbeitgeber aus deiner Region melden sich direkt bei dir – mit konkreten Job-Angeboten.';
-  document.getElementById('doneChan').textContent=S.channel==='whatsapp'?'WhatsApp':'E-Mail-Postfach';
+  document.getElementById('doneMsg').textContent='Top-Arbeitgeber aus deiner Region melden sich in den nächsten Tagen direkt bei dir – mit konkreten Job-Angeboten.';
+  document.getElementById('doneTip').style.display='';
   go('s-done');
 }
 
@@ -1137,8 +1137,8 @@ function acceptMatch(){
   S.match=true; sendLead('match_optin');
   document.getElementById('doneIco').textContent='🤝';
   document.getElementById('doneTitle').textContent=`Top, ${S.name}! 🌱`;
-  document.getElementById('doneMsg').textContent='Passende Arbeitgeber aus deiner Region melden sich direkt bei dir – mit konkreten Job-Angeboten.';
-  document.getElementById('doneChan').textContent=S.channel==='whatsapp'?'WhatsApp':'E-Mail-Postfach';
+  document.getElementById('doneMsg').textContent='Top-Arbeitgeber aus deiner Region melden sich in den nächsten Tagen direkt bei dir – mit konkreten Job-Angeboten.';
+  document.getElementById('doneTip').style.display='';
   go('s-done');
 }
 function declineMatch(){
@@ -1146,7 +1146,7 @@ function declineMatch(){
   document.getElementById('doneIco').textContent='✅';
   document.getElementById('doneTitle').textContent=`Alles klar, ${S.name}!`;
   document.getElementById('doneMsg').textContent='Dein Gehalts-Ergebnis ist unterwegs. Wenn du es dir später anders überlegst, melde dich einfach.';
-  document.getElementById('doneChan').textContent=S.channel==='whatsapp'?'WhatsApp':'E-Mail-Postfach';
+  document.getElementById('doneTip').style.display='none';
   go('s-done');
 }
 
