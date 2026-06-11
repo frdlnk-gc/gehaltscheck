@@ -1240,7 +1240,8 @@ function declineMatch(){
    kein aktuelles Gehalt). Der Verdict wird clientseitig zu einer
    Kategorie verdichtet, damit kein Rückschluss aufs Gehalt möglich ist. */
 const RESULT_PAGE = "https://gehaltscheck.green-careers.de/ergebnis.html";
-function buildResultUrl(c){
+/* Query-String (ohne führendes ?) – für den dynamischen WhatsApp-Button. */
+function buildResultQuery(c){
   let v='unknown';
   if(S.salaryKnown){ const diff=Math.round((c.mid-S.salary)/c.mid*100); v = diff>=6?'under' : diff<=-6?'over' : 'fair'; }
   const certLabels=(S.certs||[]).filter(k=>k&&k!=='none'&&CERTS[k]).map(k=>CERTS[k].label);
@@ -1251,8 +1252,10 @@ function buildResultUrl(c){
   p.set('p',c.p.label); p.set('r',c.regLabel); p.set('e',c.e.label);
   p.set('h',S.hours); if(certLabels.length) p.set('c',certLabels.join('|'));
   p.set('v',v);
-  return RESULT_PAGE+'?'+p.toString();
+  return p.toString();
 }
+/* Voll-URL – für die E-Mail (Button/Link kann die ganze URL nutzen). */
+function buildResultUrl(c){ return RESULT_PAGE+'?'+buildResultQuery(c); }
 
 /* ---------- Lead senden ---------- */
 /* Map: internes Event -> Meta-Standard-Event-Name (für Pixel + CAPI). */
@@ -1292,6 +1295,7 @@ function sendLead(event){
     tarif_benchmark:c.tarif||null,
     wants_matching:S.match,
     result_url:buildResultUrl(c),
+    result_query:buildResultQuery(c),
     market_range:c.low.toLocaleString('de-DE')+' – '+c.high.toLocaleString('de-DE')+' €'
   };
   console.log('[LEAD]',payload);
