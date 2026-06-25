@@ -447,7 +447,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q1: FACHRICHTUNG ============ -->
   <section class="screen" id="s-fach">
-    <div class="q-step">Frage 1 von 9</div>
+    <div class="q-step">Frage 1 von 10</div>
     <div class="q-title">In welcher Fachrichtung arbeitest du?</div>
     <div class="q-sub">Damit wir dich der richtigen GaLaBau-Sparte zuordnen.</div>
     <div class="options" id="fachOpts"></div>
@@ -456,7 +456,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q2: POSITION ============ -->
   <section class="screen" id="s-pos">
-    <div class="q-step">Frage 2 von 9</div>
+    <div class="q-step">Frage 2 von 10</div>
     <div class="q-title">Was ist deine Position?</div>
     <div class="q-sub">Tippe einfach drauf – nichts zu schreiben.</div>
     <div class="options" id="posOpts"></div>
@@ -465,7 +465,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q3: PLZ ============ -->
   <section class="screen" id="s-plz">
-    <div class="q-step">Frage 3 von 9</div>
+    <div class="q-step">Frage 3 von 10</div>
     <div class="q-title">Wo arbeitest du?</div>
     <div class="q-sub">Deine Postleitzahl – Gehälter unterscheiden sich stark nach Region.</div>
     <input class="plz-input" id="plzInput" type="tel" inputmode="numeric" maxlength="5" placeholder="z. B. 80331" oninput="plzInput(this.value)">
@@ -478,7 +478,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q4: BERUFSERFAHRUNG ============ -->
   <section class="screen" id="s-exp">
-    <div class="q-step">Frage 4 von 9</div>
+    <div class="q-step">Frage 4 von 10</div>
     <div class="q-title">Wie viele Jahre Berufserfahrung hast du?</div>
     <div class="q-sub">Erfahrung macht beim Gehalt oft den größten Unterschied.</div>
     <div class="slider-val"><span id="expShow">3</span> <span class="eur" id="expUnit">Jahre</span></div>
@@ -493,7 +493,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q5: BETRIEBSGRÖSSE ============ -->
   <section class="screen" id="s-size">
-    <div class="q-step">Frage 5 von 9</div>
+    <div class="q-step">Frage 5 von 10</div>
     <div class="q-title">Wie groß ist dein Betrieb?</div>
     <div class="q-sub">Größere Betriebe zahlen im Schnitt etwas mehr &amp; tariftreuer.</div>
     <div class="chips" id="sizeChips"></div>
@@ -502,7 +502,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q6: WOCHENSTUNDEN ============ -->
   <section class="screen" id="s-hours">
-    <div class="q-step">Frage 6 von 9</div>
+    <div class="q-step">Frage 6 von 10</div>
     <div class="q-title">Wie viele Stunden arbeitest du pro Woche?</div>
     <div class="q-sub">Wichtig, um dein Gehalt fair einzuordnen.</div>
     <div class="slider-val"><span id="hoursShow">40</span> <span class="eur">Std./Woche</span></div>
@@ -517,7 +517,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q7: ZUFRIEDENHEIT ============ -->
   <section class="screen" id="s-sat">
-    <div class="q-step">Frage 7 von 9</div>
+    <div class="q-step">Frage 7 von 10</div>
     <div class="q-title">Wie zufrieden bist du mit deinem Lohn?</div>
     <div class="q-sub">Ehrlich – das bleibt komplett anonym.</div>
     <div class="chips" id="satChips"></div>
@@ -526,7 +526,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q8: AKTUELLES GEHALT ============ -->
   <section class="screen" id="s-sal">
-    <div class="q-step">Frage 8 von 9</div>
+    <div class="q-step">Frage 8 von 10</div>
     <div class="q-title">Was verdienst du aktuell?</div>
     <div class="q-sub">Brutto im Monat – nur so sehen wir, ob du fair bezahlt wirst.</div>
     <div class="slider-val"><span id="salShow">2.800</span> <span class="eur">€ / Monat</span></div>
@@ -542,14 +542,23 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 
   <!-- ============ Q9: ZERTIFIKATE ============ -->
   <section class="screen" id="s-cert">
-    <div class="q-step">Frage 9 von 9</div>
+    <div class="q-step">Frage 9 von 10</div>
     <div class="q-title">Welche Scheine &amp; Zertifikate hast du?</div>
     <div class="q-sub">Mehrfachauswahl – die zahlen sich beim Gehalt aus.</div>
     <div class="chips" id="certChips"></div>
     <div style="margin-top:22px">
-      <button class="btn btn-primary" onclick="finishQuiz()">Mein Ergebnis berechnen <span class="arrow">→</span></button>
+      <button class="btn btn-primary" onclick="go('s-intent')">Weiter <span class="arrow">→</span></button>
     </div>
     <div class="backlink"><button class="btn btn-ghost" onclick="go('s-sal')">← Zurück</button></div>
+  </section>
+
+  <!-- ============ Q10: JOB-INTENT (Vorqualifizierung) ============ -->
+  <section class="screen" id="s-intent">
+    <div class="q-step">Frage 10 von 10</div>
+    <div class="q-title">Bist du aktuell offen für neue Stellenangebote?</div>
+    <div class="q-sub">Ganz ehrlich – so melden wir uns nur, wenn's für dich gerade passt.</div>
+    <div class="chips" id="intentChips"></div>
+    <div class="backlink"><button class="btn btn-ghost" onclick="go('s-cert')">← Zurück</button></div>
   </section>
 
   <!-- ============ LOADING ============ -->
@@ -822,6 +831,13 @@ const SAT = {
   great:{label:'Sehr zufrieden',  emoji:'😄'},
 };
 
+/* ---------- Job-Intent (Vorqualifizierung, kein Gehaltseinfluss) ---------- */
+const INTENT = {
+  active:   {label:'Ja, aktiv auf Jobsuche',          emoji:'🔍'},
+  open:     {label:'Ja, grundsätzlich offen',         emoji:'👍'},
+  interest: {label:'Nein, aktuell nur aus Interesse', emoji:'🤔'},
+};
+
 /* ---------- Zertifikate (additiver Gehalts-Bonus, gedeckelt) ---------- */
 const CERTS = {
   motorsaege:{label:'Motorsägenschein (Modul A/B)',          m:.012},
@@ -847,14 +863,14 @@ const CERT_CAP = .08;
 /* ---------- State ---------- */
 const S = {fach:null, pos:null, plz:'', region:null, ort:null, kreis:null, metroLabel:null, metroM:0,
   expYears:3, size:null, hours:40, sat:null, salary:2800, salaryKnown:true,
-  certs:[], firstName:'', lastName:'', name:'', phone:'', email:'', channel:'whatsapp', contact:'', match:null};
+  certs:[], intent:null, firstName:'', lastName:'', name:'', phone:'', email:'', channel:'whatsapp', contact:'', match:null};
 
 /* ---------- PLZ-Datenbank laden (Ort + Landkreis + Bundesland) ---------- */
 let PLZDB=null;
 fetch('plz.json').then(r=>r.json()).then(d=>{PLZDB=d;}).catch(()=>{});
 
 /* ---------- Navigation ---------- */
-const ORDER=['s-fach','s-pos','s-plz','s-exp','s-size','s-hours','s-sat','s-sal','s-cert'];
+const ORDER=['s-fach','s-pos','s-plz','s-exp','s-size','s-hours','s-sat','s-sal','s-cert','s-intent'];
 const TOTAL=ORDER.length;
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -983,6 +999,22 @@ function hoursSlide(v){
     b.onclick=()=>{S.sat=k;
       document.querySelectorAll('#satChips .chip').forEach(o=>o.classList.remove('sel'));
       b.classList.add('sel'); setTimeout(()=>go('s-sal'),180);};
+    c.appendChild(b);
+  }
+})();
+
+/* ---------- Render: Job-Intent (Vorqualifizierung) ---------- */
+(function(){
+  const c=document.getElementById('intentChips');
+  for(const [k,s] of Object.entries(INTENT)){
+    const b=document.createElement('button');
+    b.className='chip';
+    b.innerHTML=`<span class="big">${s.emoji}</span><span class="sm">${s.label}</span>`;
+    b.onclick=()=>{S.intent=k;
+      document.querySelectorAll('#intentChips .chip').forEach(o=>o.classList.remove('sel'));
+      b.classList.add('sel');
+      track('JobIntent',{intent:k,content_name:'gehalts_check'});
+      setTimeout(finishQuiz,180);};
     c.appendChild(b);
   }
 })();
@@ -1307,6 +1339,7 @@ function sendLead(event){
     betriebsgroesse:S.size, betriebsgroesse_label:S.size?SIZES[S.size].label:null,
     wochenstunden:S.hours,
     lohn_zufriedenheit:S.sat, lohn_zufriedenheit_label:S.sat?SAT[S.sat].label:null,
+    job_intent:S.intent, job_intent_label:S.intent?INTENT[S.intent].label:null,
     current_salary:S.salaryKnown?S.salary:null,
     current_employer:S.currentEmployer||null,
     zertifikate:S.certs,
