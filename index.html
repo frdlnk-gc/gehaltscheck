@@ -616,19 +616,6 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <span>Ja, schickt mir mein Gehalts-Ergebnis per <span id="cChan">WhatsApp</span>. Ich kann jederzeit widersprechen. <a href="#" onclick="return false">Datenschutz</a></span>
       </label>
 
-      <label class="consent" style="background:#edfaf0;border:1.5px solid #c4ecce;border-radius:13px;padding:12px 13px;margin:0 0 10px">
-        <input type="checkbox" id="c2" onchange="toggleEmployerField()">
-        <span><b style="color:var(--green-800)">Ja, ich bin offen für mehr Gehalt.</b> Schlagt mir passende, geprüfte <span id="cFach">GaLaBau</span>-Arbeitgeber aus meiner Region vor, die mehr zahlen – und gebt meine Angaben dafür an passende regionale Partnerbetriebe weiter. Mein jetziger Arbeitgeber erfährt nichts. <span style="color:#9aa89f">(optional)</span></span>
-      </label>
-
-      <div id="employerWrap" style="display:none;margin:0 0 16px">
-        <div class="field">
-          <label for="fEmployer">Dein aktueller Arbeitgeber <span style="color:#9aa89f;font-weight:500">(optional, aber empfohlen)</span></label>
-          <input id="fEmployer" type="text" placeholder="z. B. Mustermann GaLaBau GmbH" autocomplete="organization">
-          <div style="font-size:11.5px;color:var(--ink-soft);margin-top:7px;line-height:1.45">🔒 Diesen Betrieb <b>schließen wir bei der Vermittlung gezielt aus</b> – so landet deine Anfrage garantiert nicht bei deinem jetzigen Chef.</div>
-        </div>
-      </div>
-
       <button class="btn btn-primary" onclick="submitGate()">Mein Ergebnis ansehen <span class="arrow">→</span></button>
       <div id="gateErr" style="color:#c0392b;font-size:13px;font-weight:600;text-align:center;margin-top:10px;display:none"></div>
       <div class="microtrust">🔒 Kein Spam. Dein jetziger Arbeitgeber erfährt nichts.</div>
@@ -655,8 +642,6 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     </div>
 
     <div class="verdict" id="verdict"></div>
-
-    <div id="matchCta"></div>
 
     <div class="breakdown" id="breakdown"></div>
   </section>
@@ -1098,17 +1083,12 @@ function finishQuiz(){
 function prepGate(c){
   document.querySelector('#s-gate .gate-peek .blurnum').textContent=
     `${c.low.toLocaleString('de-DE')} – ${c.high.toLocaleString('de-DE')} € / Monat`;
-  const cf=document.getElementById('cFach'); if(cf) cf.textContent=c.fachShort;
 }
 function setChannel(ch){
   S.channel=ch;
   document.getElementById('tgWa').classList.toggle('on',ch==='whatsapp');
   document.getElementById('tgMail').classList.toggle('on',ch==='email');
   const cc=document.getElementById('cChan'); if(cc) cc.textContent=(ch==='whatsapp'?'WhatsApp':'E-Mail');
-}
-function toggleEmployerField(){
-  const on=document.getElementById('c2').checked;
-  document.getElementById('employerWrap').style.display=on?'block':'none';
 }
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function isValidPhone(v){ const d=v.replace(/[^\d]/g,''); return /^[+]?[\d\s\/().-]+$/.test(v) && d.length>=7 && d.length<=15; }
@@ -1128,8 +1108,7 @@ function submitGate(){
   err.style.display='none';
   S.firstName=first; S.lastName=last; S.name=first; S.phone=phone; S.email=email;
   S.contact=(S.channel==='whatsapp'?phone:email);
-  S.match=document.getElementById('c2').checked;
-  S.currentEmployer=document.getElementById('fEmployer').value.trim();
+  S.match=(S.intent==='active'||S.intent==='open');
   // Advanced Matching: Kontaktdaten an Pixel (Meta hasht clientseitig)
   if(window.fbq && window.META_PIXEL_ID){
     fbq('init', window.META_PIXEL_ID, {em:S.email, ph:S.phone, fn:S.firstName, ln:S.lastName, zp:S.plz, ct:S.ort||'', country:'de'});
@@ -1205,34 +1184,6 @@ function renderResult(){
   rows.push(['Realistische Spanne', c.low.toLocaleString('de-DE')+' – '+c.high.toLocaleString('de-DE')+' €']);
   bd.innerHTML=rows.map(r=>`<div class="brow"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('');
 
-  renderMatchCta();
-}
-
-/* ---------- Match-CTA auf der Ergebnis-Seite (spiegelt Gate-Entscheidung) ---------- */
-function renderMatchCta(){
-  const el=document.getElementById('matchCta');
-  if(!el) return;
-  const fShort=(S.fach&&FACH[S.fach])?FACH[S.fach].short:'GaLaBau';
-  if(S.match){
-    const excl = S.currentEmployer
-      ? `🔒 Diskret: <b>${esc(S.currentEmployer)}</b> – deinen jetzigen Arbeitgeber – schließen wir bei der Vermittlung gezielt aus. Deine Anfrage landet garantiert nicht dort.`
-      : `🤫 Diskret: Wir geben deine Angaben nur passend an geprüfte Betriebe weiter. Dein jetziger Arbeitgeber erfährt nichts.`;
-    el.innerHTML=`<div class="matchbox">
-      <div class="pill">🤝 Du bist dabei</div>
-      <div class="mh">Wir suchen dir Arbeitgeber, die <span style="color:var(--green-600)">mehr zahlen</span></div>
-      <div class="mp">Du hast zugestimmt – wir gleichen dein Profil mit 500+ geprüften ${fShort}-Betrieben aus deiner Region ab und geben deine Angaben an passende regionale Partnerbetriebe weiter. Die melden sich dann direkt über ${S.channel==='whatsapp'?'WhatsApp':'E-Mail'} bei dir.</div>
-      <div class="disclaim">${excl}</div>
-    </div>`;
-  } else {
-    el.innerHTML=`<div class="matchbox">
-      <div class="pill">🤝 Aktiv suchend? Optional.</div>
-      <div class="mh">Sollen wir dir Arbeitgeber vorschlagen, die <span style="color:var(--green-600)">mehr zahlen</span>?</div>
-      <div class="mp">500+ geprüfte ${fShort}-Betriebe suchen aktuell Fachkräfte wie dich. Wir matchen dich passend zu Region &amp; Position – nur wenn <b>du</b> es willst.</div>
-      <button class="btn btn-lime" onclick="acceptMatch()">Ja, schlagt mir Arbeitgeber vor 🌱</button>
-      <button class="btn btn-ghost" onclick="declineMatch()">Nein danke, nur das Ergebnis</button>
-      <div class="disclaim">🤫 Diskret: Wir geben deine Daten <b>nur</b> mit deinem aktiven „Ja" und passend weiter. Dein jetziger Arbeitgeber erfährt nichts.</div>
-    </div>`;
-  }
 }
 
 function countUp(id,from,to,dur){
@@ -1241,33 +1192,6 @@ function countUp(id,from,to,dur){
     el.textContent=Math.round(from+(to-from)*e).toLocaleString('de-DE');
     if(p<1)requestAnimationFrame(f);}
   requestAnimationFrame(f);
-}
-
-/* ---------- Gate-bestätigtes Matching: nur abschließen, kein erneutes Fragen ---------- */
-function finishMatched(){
-  document.getElementById('doneIco').textContent='🤝';
-  document.getElementById('doneTitle').textContent=`Top, ${S.name}! 🌱`;
-  document.getElementById('doneMsg').textContent='Top-Arbeitgeber aus deiner Region melden sich in den nächsten Tagen direkt bei dir – mit konkreten Job-Angeboten.';
-  document.getElementById('doneTip').style.display='';
-  go('s-done');
-}
-
-/* ---------- Match decision (nur falls am Gate NICHT zugestimmt) ---------- */
-function acceptMatch(){
-  S.match=true; sendLead('match_optin');
-  document.getElementById('doneIco').textContent='🤝';
-  document.getElementById('doneTitle').textContent=`Top, ${S.name}! 🌱`;
-  document.getElementById('doneMsg').textContent='Top-Arbeitgeber aus deiner Region melden sich in den nächsten Tagen direkt bei dir – mit konkreten Job-Angeboten.';
-  document.getElementById('doneTip').style.display='';
-  go('s-done');
-}
-function declineMatch(){
-  S.match=false; sendLead('match_declined');
-  document.getElementById('doneIco').textContent='✅';
-  document.getElementById('doneTitle').textContent=`Alles klar, ${S.name}!`;
-  document.getElementById('doneMsg').textContent='Dein Gehalts-Ergebnis ist unterwegs. Wenn du es dir später anders überlegst, melde dich einfach.';
-  document.getElementById('doneTip').style.display='none';
-  go('s-done');
 }
 
 /* ---------- Ergebnis-Link für WhatsApp/E-Mail ----------
@@ -1310,7 +1234,7 @@ function toE164(raw){
 
 /* ---------- Lead senden ---------- */
 /* Map: internes Event -> Meta-Standard-Event-Name (für Pixel + CAPI). */
-const META_EVENT_MAP = { lead_captured:'Lead', match_optin:'CompleteRegistration', match_declined:'MatchDeclined' };
+const META_EVENT_MAP = { lead_captured:'Lead' };
 function sendLead(event){
   const c=calc();
   const metaEvent = META_EVENT_MAP[event] || event;
