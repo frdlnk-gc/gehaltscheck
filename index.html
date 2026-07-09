@@ -616,6 +616,13 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
         <span>Ja, schickt mir mein Gehalts-Ergebnis per <span id="cChan">WhatsApp</span>. Ich kann jederzeit widersprechen. <a href="https://www.green-careers.de/datenschutz" target="_blank" rel="noopener">Datenschutz</a></span>
       </label>
 
+      <label class="consent" style="background:#edfaf0;border:1.5px solid #c4ecce;border-radius:13px;padding:12px 13px;margin:0 0 14px">
+        <input type="checkbox" id="c2">
+        <span><b style="color:var(--green-800)">Ja, GreenCareers darf meine Daten an passende Partnerbetriebe aus der grünen Branche weitergeben.</b> Diese dürfen mich zu passenden Stellenangeboten per Telefon, WhatsApp und E-Mail kontaktieren. Freiwillig, jederzeit mit Wirkung für die Zukunft widerrufbar (z. B. per E-Mail an <a href="mailto:hello@green-careers.de">hello@green-careers.de</a>).</span>
+      </label>
+
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5;margin:0 0 14px">Deinen Marktwert bekommst du in jedem Fall. Nur wenn du die zweite Zustimmung gibst, leiten wir dein Profil an passende Betriebe in deiner Region weiter, die sich dann direkt bei dir melden. Details in unserer <a href="https://www.green-careers.de/datenschutz" target="_blank" rel="noopener" style="color:var(--green-700);font-weight:600">Datenschutzerklärung</a>.</div>
+
       <button class="btn btn-primary" onclick="submitGate()">Mein Ergebnis ansehen <span class="arrow">→</span></button>
       <div id="gateErr" style="color:#c0392b;font-size:13px;font-weight:600;text-align:center;margin-top:10px;display:none"></div>
       <div class="microtrust">🔒 Kein Spam. Dein jetziger Arbeitgeber erfährt nichts.</div>
@@ -642,6 +649,8 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
     </div>
 
     <div class="verdict" id="verdict"></div>
+
+    <div id="shareConfirm"></div>
 
     <div class="breakdown" id="breakdown"></div>
   </section>
@@ -1093,6 +1102,12 @@ function setChannel(ch){
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function isValidPhone(v){ const d=v.replace(/[^\d]/g,''); return /^[+]?[\d\s\/().-]+$/.test(v) && d.length>=7 && d.length<=15; }
 function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+/* ---------- Consent-Texte (revisionssicher, mit Version) ---------- */
+const CONSENT_VERSION = '2026-07-09-v1';
+const CONSENT_RESULT_TEXT = 'Ja, schickt mir mein Gehalts-Ergebnis per WhatsApp/E-Mail. Ich kann jederzeit widersprechen.';
+const CONSENT_SHARE_TEXT = 'Ja, GreenCareers darf meine Daten an passende Partnerbetriebe aus der grünen Branche weitergeben. Diese dürfen mich zu passenden Stellenangeboten per Telefon, WhatsApp und E-Mail kontaktieren. Freiwillig, jederzeit mit Wirkung für die Zukunft widerrufbar (z. B. per E-Mail an hello@green-careers.de).';
+
 function submitGate(){
   const first=document.getElementById('fFirst').value.trim();
   const last=document.getElementById('fLast').value.trim();
@@ -1108,7 +1123,8 @@ function submitGate(){
   err.style.display='none';
   S.firstName=first; S.lastName=last; S.name=first; S.phone=phone; S.email=email;
   S.contact=(S.channel==='whatsapp'?phone:email);
-  S.match=(S.intent==='active'||S.intent==='open');
+  S.consentResult=ok;                                   // Checkbox 1: Ergebnis-Zustellung
+  S.match=document.getElementById('c2').checked;        // Checkbox 2: Datenweitergabe an Betriebe
   // Advanced Matching: Kontaktdaten an Pixel (Meta hasht clientseitig)
   if(window.fbq && window.META_PIXEL_ID){
     fbq('init', window.META_PIXEL_ID, {em:S.email, ph:S.phone, fn:S.firstName, ln:S.lastName, zp:S.plz, ct:S.ort||'', country:'de'});
@@ -1184,6 +1200,16 @@ function renderResult(){
   rows.push(['Realistische Spanne', c.low.toLocaleString('de-DE')+' – '+c.high.toLocaleString('de-DE')+' €']);
   bd.innerHTML=rows.map(r=>`<div class="brow"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('');
 
+  // Weitergabe-Bestätigung NUR wenn Checkbox 2 gesetzt (sonst kein Weitergabe-Versprechen)
+  const sc=document.getElementById('shareConfirm');
+  if(sc){
+    sc.innerHTML = S.match
+      ? `<div style="background:#edfaf0;border:1.5px solid #c4ecce;border-radius:14px;padding:16px;margin:0 0 4px">
+           <div style="font-weight:800;color:var(--green-800);font-size:15px;margin-bottom:5px">🤝 Passende Betriebe melden sich bei dir</div>
+           <div style="font-size:13.5px;color:var(--ink-soft);line-height:1.5">Du hast zugestimmt – wir stellen dein Profil geprüften Betrieben aus deiner Region vor, die sich mit passenden Job-Angeboten direkt bei dir melden. Jederzeit widerrufbar per E-Mail an <a href="mailto:hello@green-careers.de" style="color:var(--green-700);font-weight:600">hello@green-careers.de</a>.</div>
+         </div>`
+      : '';
+  }
 }
 
 function countUp(id,from,to,dur){
@@ -1270,6 +1296,11 @@ function sendLead(event){
     market_low:c.low, market_high:c.high, market_mid:c.mid,
     tarif_benchmark:c.tarif||null,
     wants_matching:S.match,
+    // --- Herkunft + Consent (revisionssicher) ---
+    source:'gehaltscheck',
+    consent_version:CONSENT_VERSION,
+    consent_result:!!S.consentResult, consent_result_text:CONSENT_RESULT_TEXT,
+    consent_share:!!S.match, consent_share_text:CONSENT_SHARE_TEXT,
     result_url:buildResultUrl(c),
     result_query:buildResultQuery(c),
     result_token:buildResultToken(c),
